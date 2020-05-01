@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
-import stories from '../../data/stories'
 import Column from '../Column'
 import CTA from '../CTA'
 import Error from '../Error'
@@ -13,12 +12,14 @@ import Title from '../Title'
 import getRawCardData from '../../helpers/getRawCardData'
 import microMarkdown from '../../helpers/microMarkdown'
 import getExcerpt from '../../helpers/getExcerpt'
+import useFetch from '../../hooks/useFetch'
 import './index.css'
 
-const getStoriesFromAuthor = author =>
+const getStoriesFromAuthor = (stories, author) =>
   stories.filter(story => story.author === author)
 
 export default function Story(props) {
+  const { data: stories = [] } = useFetch('/data/stories.json')
   const match = useRouteMatch()
   const id = match.params.storyId
 
@@ -28,7 +29,7 @@ export default function Story(props) {
   try {
     const decoded = decodeURIComponent(window.atob(id))
     const [title, author] = decoded.split('-')
-    storiesByAuthor = getStoriesFromAuthor(author)
+    storiesByAuthor = getStoriesFromAuthor(stories, author)
     story = storiesByAuthor.find(story => story.title === title)
 
     if (!story) throw new Error('STORY_NOT_FOUND')

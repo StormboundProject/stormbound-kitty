@@ -1,5 +1,5 @@
 import { FACTIONS } from '../../../src/constants/game'
-import stories from '../../../src/data/stories'
+import stories from '../../../public/data/stories'
 
 describe('Routes — Stories', () => {
   ;['lore', ...Object.keys(FACTIONS)].forEach(category => {

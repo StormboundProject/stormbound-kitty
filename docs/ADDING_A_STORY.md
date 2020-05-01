@@ -12,7 +12,7 @@ Log into your GitHub account. GitHub is a platform to collaboratively work on (o
 
 ## Adding your story
 
-Go to https://github.com/KittySparkles/stormbound-kitty/edit/master/src/data/stories.js. This will open a page with a big form where you will get to update the content.
+Go to https://github.com/KittySparkles/stormbound-kitty/edit/master/public/data/stories.json. This will open a page with a big form where you will get to update the content.
 
 This file you will edit is the one containing all the stories from the site. Technically speaking, this is a JavaScript file exporting an “array” (a collection) of “objects” (small key-value maps), and each object has a `title` key (the name of the story, usually the card name), a `content` key (the actual story), an `author` key (your nickname) and a `cardId` key (which can be found in the [`cards.json` file](https://github.com/KittySparkles/stormbound-kitty/blob/master/src/data/cards.json)).
 
