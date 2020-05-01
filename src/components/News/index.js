@@ -12,7 +12,7 @@ import './index.css'
 const MAX_NEWS = 7
 
 export default React.memo(function News(props) {
-  const { data: news = [], error, loading } = useFetch('data/news.json')
+  const { data: news = [], error, loading } = useFetch('/data/news.json')
   const pages = chunk(news, MAX_NEWS)
   const [activePage, setActivePage] = React.useState(0)
   const loadPrev = () => setActivePage(page => page + 1)
