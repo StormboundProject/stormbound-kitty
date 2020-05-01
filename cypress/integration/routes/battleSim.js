@@ -1,4 +1,4 @@
-import PUZZLES from '../../../src/data/puzzles'
+import PUZZLES from '../../../public/data/puzzles'
 
 describe('Routes — Battle Sim', () => {
   it('it should render', () => {

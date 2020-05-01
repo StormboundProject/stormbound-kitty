@@ -1,17 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import puzzles from '../../data/puzzles'
+import hookIntoProps from 'hook-into-props'
 import Column from '../Column'
 import EmptySearch from '../EmptySearch'
+import Error from '../Error'
 import InfoHint from '../InfoHint'
+import Loader from '../Loader'
 import PageMeta from '../PageMeta'
 import Puzzle from '../BattleSimPuzzle'
 import PuzzlesFilters from '../BattleSimPuzzlesFilters'
 import Row from '../Row'
 import Title from '../Title'
+import useFetch from '../../hooks/useFetch'
 import './index.css'
 
-export default class BattleSimPuzzles extends React.Component {
+class BattleSimPuzzles extends React.Component {
   state = {
     difficulty: '*',
     type: '*',
@@ -47,7 +50,7 @@ export default class BattleSimPuzzles extends React.Component {
     )
 
   getPuzzles = () =>
-    puzzles
+    (this.props.data || [])
       .filter(this.matchesName)
       .filter(this.matchesDifficulty)
       .filter(this.matchesRestriction)
@@ -68,7 +71,11 @@ export default class BattleSimPuzzles extends React.Component {
           <Column width='2/3'>
             <Title>Puzzles</Title>
 
-            {puzzles.length > 0 ? (
+            {this.props.loading ? (
+              <Loader />
+            ) : this.props.error ? (
+              <Error noTitle error={`Error fetching puzzles.`} />
+            ) : puzzles.length > 0 ? (
               <ul className='BattleSimPuzzles__list'>
                 {puzzles.map(puzzle => (
                   <li className='BattleSimPuzzles__item' key={puzzle.name}>
@@ -98,3 +105,7 @@ export default class BattleSimPuzzles extends React.Component {
     )
   }
 }
+
+export default hookIntoProps(() => useFetch('/data/puzzles.json'))(
+  BattleSimPuzzles
+)

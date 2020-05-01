@@ -1,11 +1,12 @@
 import React from 'react'
-import puzzles from '../../data/puzzles'
 import AppDesktop from '../BattleSimAppDesktop'
 import AppMobile from '../BattleSimAppMobile'
 import State from '../BattleSimState'
 import useViewportWidth from '../../hooks/useViewportWidth'
+import useFetch from '../../hooks/useFetch'
 
 const App = React.memo(function App(props) {
+  const { data: puzzles = [] } = useFetch('/data/puzzles.json')
   const viewportWidth = useViewportWidth()
   const puzzle = puzzles.find(puzzle => puzzle.board === props.simId)
   const shouldRenderLeftPanel =
