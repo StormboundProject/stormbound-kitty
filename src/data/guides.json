@@ -7,7 +7,8 @@
     "link": "/guides/complete",
     "faction": "neutral",
     "cardId": "I28",
-    "background": "/assets/images/environment_neutral.png"
+    "background": "/assets/images/environment_neutral.png",
+    "path": "/data/guide_complete.md"
   },
   {
     "id": "DECK_GUIDE",
@@ -27,7 +28,8 @@
     "link": "/guides/winter",
     "faction": "winter",
     "cardId": "W9",
-    "background": "/assets/images/environment_winter.png"
+    "background": "/assets/images/environment_winter.png",
+    "path": "/data/guide_winter.md"
   },
   {
     "id": "PIRATE_GUIDE",
@@ -37,7 +39,8 @@
     "link": "/guides/pirate",
     "faction": "neutral",
     "cardId": "N42",
-    "background": "/assets/images/environment_neutral.png"
+    "background": "/assets/images/environment_neutral.png",
+    "path": "/data/guide_pirate.md"
   },
   {
     "id": "LEXICON",

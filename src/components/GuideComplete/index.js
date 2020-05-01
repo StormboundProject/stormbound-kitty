@@ -1,24 +1,27 @@
 import React from 'react'
 import Guide from '../Guide'
+import Error from '../Error'
+import Loader from '../Loader'
 import Markdown from '../Markdown'
-import data from '../../data/Stormbound_guide.md'
 import guides from '../../data/guides'
+import useFetch from '../../hooks/useFetch'
 import './index.css'
 
-const guide = guides.find(g => g.id === 'COMPLETE_GUIDE')
-
 export default React.memo(function GuideComplete(props) {
-  const [content, setContent] = React.useState(null)
+  const guide = guides.find(guide => guide.id === 'COMPLETE_GUIDE')
+  const { data: content, error, loading } = useFetch(guide.path, {
+    format: 'TEXT',
+  })
 
-  React.useEffect(() => {
-    fetch(data)
-      .then(response => response.text())
-      .then(setContent)
-  }, [])
-
-  return content ? (
+  return (
     <Guide {...guide} className='GuideComplete'>
-      <Markdown source={content} />
+      {error ? (
+        <Error noTitle error='Error loading guide.' />
+      ) : loading ? (
+        <Loader />
+      ) : (
+        <Markdown source={content} />
+      )}
     </Guide>
-  ) : null
+  )
 })

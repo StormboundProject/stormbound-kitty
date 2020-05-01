@@ -1,23 +1,26 @@
 import React from 'react'
-import data from '../../data/Winter_guide.md'
-import guides from '../../data/guides'
+import Error from '../Error'
 import Guide from '../Guide'
+import Loader from '../Loader'
 import Markdown from '../Markdown'
-
-const guide = guides.find(g => g.id === 'WINTER_GUIDE')
+import guides from '../../data/guides'
+import useFetch from '../../hooks/useFetch'
 
 export default React.memo(function GuideWinter(props) {
-  const [content, setContent] = React.useState(null)
+  const guide = guides.find(guide => guide.id === 'WINTER_GUIDE')
+  const { data: content, error, loading } = useFetch(guide.path, {
+    format: 'TEXT',
+  })
 
-  React.useEffect(() => {
-    fetch(data)
-      .then(response => response.text())
-      .then(setContent)
-  }, [])
-
-  return content ? (
+  return (
     <Guide {...guide}>
-      <Markdown source={content} />
+      {error ? (
+        <Error error='Error loading guide.' />
+      ) : loading ? (
+        <Loader />
+      ) : (
+        <Markdown source={content} />
+      )}
     </Guide>
-  ) : null
+  )
 })
