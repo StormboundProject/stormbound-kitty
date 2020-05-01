@@ -2,17 +2,19 @@ import React from 'react'
 import ChangelogLegend from '../ChangelogLegend'
 import Checkbox from '../Checkbox'
 import Column from '../Column'
+import Error from '../Error'
+import Loader from '../Loader'
 import PageMeta from '../PageMeta'
 import Row from '../Row'
 import Title from '../Title'
 import WikiLink from '../WikiLink'
-import changelog from '../../data/changelog'
 import sortCards from '../../helpers/sortCards'
 import template from '../../helpers/template'
 import getRawCardData from '../../helpers/getRawCardData'
+import useFetch from '../../hooks/useFetch'
 import cards from '../../data/cards'
-import './index.css'
 import MOOD_MAP from './map'
+import './index.css'
 
 const CARD_IDS = cards.sort(sortCards()).map(card => card.id)
 const getCardName = id => getRawCardData(id).name
@@ -54,6 +56,9 @@ const formatDate = date => {
 }
 
 export default function Changelog(props) {
+  const { data: changelog = [], loading, error } = useFetch(
+    '/data/changelog.json'
+  )
   const [sorting, setSorting] = React.useState('DATE')
   const [colorCoding, setColorCoding] = React.useState(true)
   const [type, setType] = React.useState('*')
@@ -67,7 +72,7 @@ export default function Changelog(props) {
         acc[change.date].push(change)
         return acc
       }, {})
-  }, [type])
+  }, [type, changelog])
   const changesByCard = React.useMemo(() => {
     return changelog
       .filter(change => type === '*' || change.type === type)
@@ -78,7 +83,7 @@ export default function Changelog(props) {
         acc[change.id].push(change)
         return acc
       }, {})
-  }, [type])
+  }, [type, changelog])
 
   return (
     <>
@@ -142,51 +147,53 @@ export default function Changelog(props) {
           </p>
         </Column>
         <Column width='2/3'>
-          {sorting === 'DATE'
-            ? Object.keys(changesByDate)
-                .sort()
-                .reverse()
-                .map(date => (
-                  <section className='Changelog__section' key={date}>
-                    <Title className='Changelog__title'>
-                      {formatDate(date)}
-                    </Title>
-                    <ul className='Changelog__list'>
-                      {changesByDate[date].map(change => (
-                        <li key={change.date + change.id + change.description}>
-                          <WikiLink id={change.id} />:{' '}
-                          <Change
-                            description={change.description}
-                            colorCoding={colorCoding}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ))
-            : Object.keys(changesByCard)
-                .sort((a, b) => CARD_IDS.indexOf(a) - CARD_IDS.indexOf(b))
-                .map(id => (
-                  <section className='Changelog__section' key={id}>
-                    <Title className='Changelog__title'>
-                      {getCardName(id)}
-                    </Title>
-                    <ul className='Changelog__list'>
-                      {changesByCard[id].map(change => (
-                        <li key={id + change.date + change.description}>
-                          <time className='Highlight'>
-                            {formatDate(change.date)}
-                          </time>
-                          :{' '}
-                          <Change
-                            description={change.description}
-                            colorCoding={colorCoding}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ))}
+          {error ? (
+            <Error error='Error fetching changelog.' />
+          ) : loading ? (
+            <Loader />
+          ) : sorting === 'DATE' ? (
+            Object.keys(changesByDate)
+              .sort()
+              .reverse()
+              .map(date => (
+                <section className='Changelog__section' key={date}>
+                  <Title className='Changelog__title'>{formatDate(date)}</Title>
+                  <ul className='Changelog__list'>
+                    {changesByDate[date].map(change => (
+                      <li key={change.date + change.id + change.description}>
+                        <WikiLink id={change.id} />:{' '}
+                        <Change
+                          description={change.description}
+                          colorCoding={colorCoding}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))
+          ) : (
+            Object.keys(changesByCard)
+              .sort((a, b) => CARD_IDS.indexOf(a) - CARD_IDS.indexOf(b))
+              .map(id => (
+                <section className='Changelog__section' key={id}>
+                  <Title className='Changelog__title'>{getCardName(id)}</Title>
+                  <ul className='Changelog__list'>
+                    {changesByCard[id].map(change => (
+                      <li key={id + change.date + change.description}>
+                        <time className='Highlight'>
+                          {formatDate(change.date)}
+                        </time>
+                        :{' '}
+                        <Change
+                          description={change.description}
+                          colorCoding={colorCoding}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))
+          )}
         </Column>
       </Row>
       <PageMeta
