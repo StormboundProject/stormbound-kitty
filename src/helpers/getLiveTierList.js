@@ -1,10 +1,9 @@
 import cards from '../data/cards'
-import decks from '../data/decks'
 import { serialiseList } from './serialise'
 import { deserialiseDeck } from './deserialise'
 import { getLongFaction } from './encoding'
 
-const getLiveTierList = () => {
+const getLiveTierList = decks => {
   // Amount of decks of each type (computed in a single loop for performance)
   const COUNTS = {
     neutral: 0,

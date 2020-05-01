@@ -1,32 +1,31 @@
-import DECKS from '../../../src/data/decks'
-
 describe('Routes — Deck Builder', () => {
-  const deck = DECKS[0]
+  const ID =
+    'MUYxMywxTjIzLDFOMiwxTjM3LDFONjksMUYyMywxTjcyLDFOMTksMU4yMCwxRjgsMU42NCwxRjE0'
 
   it('it should render', () => {
     cy.visit('/deck').get('main h1').should('exist')
   })
 
-  it('it should render deck editor for ' + deck.id, () => {
-    cy.visit('/deck/' + deck.id)
+  it('it should render deck editor for ' + ID, () => {
+    cy.visit('/deck/' + ID)
       .get('main h1')
       .should('exist')
   })
 
-  it('it should render deck details for ' + deck.id, () => {
-    cy.visit('/deck/' + deck.id + '/details')
+  it('it should render deck details for ' + ID, () => {
+    cy.visit('/deck/' + ID + '/details')
       .get('main h1')
       .should('exist')
   })
 
-  it('it should render deck tracker for ' + deck.id, () => {
-    cy.visit('/deck/' + deck.id + '/tracker')
+  it('it should render deck tracker for ' + ID, () => {
+    cy.visit('/deck/' + ID + '/tracker')
       .get('main h1')
       .should('exist')
   })
 
-  it('it should render deck dry-runner for ' + deck.id, () => {
-    cy.visit('/deck/' + deck.id + '/dry-run')
+  it('it should render deck dry-runner for ' + ID, () => {
+    cy.visit('/deck/' + ID + '/dry-run')
       .get('main h1')
       .should('exist')
   })

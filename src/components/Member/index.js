@@ -8,16 +8,17 @@ import MemberDecks from '../MemberDecks'
 import MemberGuides from '../MemberGuides'
 import MemberStories from '../MemberStories'
 import PageMeta from '../PageMeta'
-import decks from '../../data/decks'
+import useFetch from '../../hooks/useFetch'
 import guides from '../../data/guides'
 import stories from '../../data/stories'
 
 export default React.memo(function Member(props) {
+  const { data: decks = [] } = useFetch('/data/decks.json')
   const match = useRouteMatch()
   const id = match.params.memberId.toLowerCase()
   const userDecks = React.useMemo(
     () => decks.filter(deck => deck.author.toLowerCase() === id),
-    [id]
+    [decks, id]
   )
   const userStories = React.useMemo(
     () => stories.filter(story => story.author.toLowerCase() === id),

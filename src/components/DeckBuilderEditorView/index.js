@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
 import hookIntoProps from 'hook-into-props'
-import decks from '../../data/decks'
 import { CollectionContext } from '../CollectionProvider'
 import { NotificationContext } from '../NotificationProvider'
 import CollectionClearHint from '../CollectionClearHint'
@@ -23,6 +22,7 @@ import Title from '../Title'
 import resolveCardForLevel from '../../helpers/resolveCardForLevel'
 import { deserialiseDeck } from '../../helpers/deserialise'
 import useViewportWidth from '../../hooks/useViewportWidth'
+import useFetch from '../../hooks/useFetch'
 import './index.css'
 
 class DeckBuilderEditorView extends React.Component {
@@ -90,6 +90,7 @@ class DeckBuilderEditorView extends React.Component {
 
   isSuggestedDeck = () => {
     const deckCards = this.props.deck.map(card => card.id)
+    const decks = this.props.data || []
 
     return decks.find(deck => {
       return deserialiseDeck(deck.id).every(card => deckCards.includes(card.id))
@@ -253,6 +254,7 @@ class DeckBuilderEditorView extends React.Component {
 }
 
 export default hookIntoProps(() => ({
+  ...useFetch('/data/decks.json'),
   ...React.useContext(CollectionContext),
   ...React.useContext(NotificationContext),
   viewportWidth: useViewportWidth(),

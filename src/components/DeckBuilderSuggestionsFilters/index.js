@@ -1,7 +1,6 @@
 import React from 'react'
 import { CATEGORIES } from '../../constants/decks'
 import { BRAWLS } from '../../constants/brawl'
-import decks from '../../data/decks'
 import CardSelect from '../CardSelect'
 import Column from '../Column'
 import CTA from '../CTA'
@@ -10,7 +9,7 @@ import MobileTogglableContent from '../MobileTogglableContent'
 import Row from '../Row'
 import './index.css'
 
-const getAuthors = () => {
+const getAuthors = decks => {
   const authors = []
 
   decks.forEach(deck => {
@@ -28,7 +27,7 @@ const getAuthors = () => {
 
 export default React.memo(function DeckBuilderSuggestionsFilters(props) {
   const [name, updateName] = React.useState(props.name)
-  const authors = React.useMemo(getAuthors)
+  const authors = React.useMemo(() => getAuthors(props.decks), [props.decks])
 
   return (
     <MobileTogglableContent

@@ -2,15 +2,19 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { TIER_COLORS } from '../../constants/list'
 import Column from '../Column'
+import Error from '../Error'
+import ListBuilderTier from '../ListBuilderTier'
+import Loader from '../Loader'
 import PageMeta from '../PageMeta'
 import Row from '../Row'
-import ListBuilderTier from '../ListBuilderTier'
 import Title from '../Title'
 import getInitialListData from '../../helpers/getInitialListData'
 import getLiveTierList from '../../helpers/getLiveTierList'
+import useFetch from '../../hooks/useFetch'
 
 export default React.memo(function ListBuilderDisplayView(props) {
-  const id = React.useMemo(() => getLiveTierList(), [])
+  const { data: decks = [], loading, error } = useFetch('/data/decks.json')
+  const id = React.useMemo(() => getLiveTierList(decks), [decks])
   const tiers = getInitialListData(id)
 
   return (
@@ -38,15 +42,21 @@ export default React.memo(function ListBuilderDisplayView(props) {
         <Column width='2/3'>
           <Title>Tier list</Title>
 
-          {tiers.map((tier, index) => (
-            <ListBuilderTier
-              {...tier}
-              color={TIER_COLORS[index]}
-              key={index}
-              prefix={`tier-${index}-`}
-              isEditable={false}
-            />
-          ))}
+          {error ? (
+            <Error error='Error fetching tier list.' />
+          ) : loading ? (
+            <Loader />
+          ) : (
+            tiers.map((tier, index) => (
+              <ListBuilderTier
+                {...tier}
+                color={TIER_COLORS[index]}
+                key={index}
+                prefix={`tier-${index}-`}
+                isEditable={false}
+              />
+            ))
+          )}
         </Column>
       </Row>
 

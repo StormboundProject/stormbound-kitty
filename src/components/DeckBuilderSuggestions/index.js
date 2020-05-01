@@ -3,10 +3,10 @@ import { Link, useHistory, useLocation } from 'react-router-dom'
 import LazyLoad from 'react-lazyload'
 import hookIntoProps from 'hook-into-props'
 import debounce from 'lodash.debounce'
-import decks from '../../data/decks'
 import { CollectionContext } from '../CollectionProvider'
 import Column from '../Column'
 import EmptySearch from '../EmptySearch'
+import Error from '../Error'
 import Loader from '../Loader'
 import Only from '../Only'
 import PageMeta from '../PageMeta'
@@ -15,6 +15,7 @@ import FeaturedDeck from '../FeaturedDeck'
 import SuggestionsFilters from '../DeckBuilderSuggestionsFilters'
 import Title from '../Title'
 import useViewportWidth from '../../hooks/useViewportWidth'
+import useFetch from '../../hooks/useFetch'
 import chunk from '../../helpers/chunk'
 import sortDeckSuggestions from '../../helpers/sortDeckSuggestions'
 import { deserialiseDeck } from '../../helpers/deserialise'
@@ -126,7 +127,7 @@ class DeckBuilderSuggestions extends React.Component {
     this.state.brawl === '*' || deck.brawl === this.state.brawl
 
   getDecks = () => {
-    return decks
+    return (this.props.data || [])
       .filter(this.matchesFaction)
       .filter(this.matchesCategory)
       .filter(this.matchesAuthor)
@@ -159,6 +160,7 @@ class DeckBuilderSuggestions extends React.Component {
 
             <SuggestionsFilters
               {...this.state}
+              decks={this.props.data || []}
               updateCategory={this.updateCategory}
               updateFaction={this.updateFaction}
               updateAuthor={this.updateAuthor}
@@ -187,7 +189,11 @@ class DeckBuilderSuggestions extends React.Component {
           </Column>
           <Column width='2/3'>
             <Title>Decks</Title>
-            {decks.length > 0 ? (
+            {this.props.error ? (
+              <Error noTitle error='Error fetching decks.' />
+            ) : this.props.loading ? (
+              <Loader />
+            ) : decks.length > 0 ? (
               chunk(decks, 2).map(([a, b]) => (
                 <LazyLoad
                   resize
@@ -242,6 +248,7 @@ class DeckBuilderSuggestions extends React.Component {
 }
 
 export default hookIntoProps(() => ({
+  ...useFetch('/data/decks.json'),
   viewportWidth: useViewportWidth(),
   history: useHistory(),
   location: useLocation(),
