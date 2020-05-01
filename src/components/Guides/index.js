@@ -7,7 +7,7 @@ import InfoHint from '../InfoHint'
 import Only from '../Only'
 import PageMeta from '../PageMeta'
 import Row from '../Row'
-import guides from '../../data/guides'
+import guides from '../../constants/guides'
 import chunk from '../../helpers/chunk'
 
 export default React.memo(function Guides(props) {

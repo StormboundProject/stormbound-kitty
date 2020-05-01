@@ -3,7 +3,7 @@ import Error from '../Error'
 import Guide from '../Guide'
 import Loader from '../Loader'
 import Markdown from '../Markdown'
-import guides from '../../data/guides'
+import guides from '../../constants/guides'
 import useFetch from '../../hooks/useFetch'
 
 export default React.memo(function GuideWinter(props) {

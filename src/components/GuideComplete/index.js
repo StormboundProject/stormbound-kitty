@@ -3,7 +3,7 @@ import Guide from '../Guide'
 import Error from '../Error'
 import Loader from '../Loader'
 import Markdown from '../Markdown'
-import guides from '../../data/guides'
+import guides from '../../constants/guides'
 import useFetch from '../../hooks/useFetch'
 import './index.css'
 

@@ -9,7 +9,7 @@ import MemberGuides from '../MemberGuides'
 import MemberStories from '../MemberStories'
 import PageMeta from '../PageMeta'
 import useFetch from '../../hooks/useFetch'
-import guides from '../../data/guides'
+import guides from '../../constants/guides'
 import stories from '../../data/stories'
 
 export default React.memo(function Member(props) {
