@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import WikiLink from '../components/WikiLink'
-import DryRunnerExplanation from '../components/DryRunnerExplanation'
+import WikiLink from '../WikiLink'
+import DryRunnerExplanation from '../DryRunnerExplanation'
 
 export default [
   {

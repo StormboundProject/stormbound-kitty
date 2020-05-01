@@ -6,7 +6,7 @@ import PageMeta from '../PageMeta'
 import Row from '../Row'
 import Title from '../Title'
 import TogglableContent from '../TogglableContent'
-import categories from '../../data/faq'
+import categories from './content'
 import './index.css'
 
 export default React.memo(function FAQ() {
