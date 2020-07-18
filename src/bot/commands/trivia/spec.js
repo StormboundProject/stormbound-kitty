@@ -1,49 +1,120 @@
+import Discord from 'discord.js'
 import command from './'
-const trivia = command.handler.bind(command)
 
-const client = { channels: { cache: new Map() } }
-const guild = {
+const client = new Discord.Client()
+const guild = new Discord.Guild(client, {
+  unavailable: false,
   id: '714858253531742208',
-  channels: {
-    cache: [
-      { name: 'trivia', id: 'trid' },
-      { name: 'stormbot', id: 'stid' },
-    ],
+  name: 'Kitty House',
+  icon: '<mock>',
+  splash: '<mock>',
+  region: 'eu-west',
+  member_count: 1,
+  large: false,
+  features: [],
+  application_id: Discord.SnowflakeUtil.generate(),
+  afkTimeout: 1000,
+  afk_channel_id: Discord.SnowflakeUtil.generate(),
+  system_channel_id: Discord.SnowflakeUtil.generate(),
+  embed_enabled: true,
+  verification_level: 2,
+  explicit_content_filter: 3,
+  mfa_level: 8,
+  joined_at: new Date('2018-01-01').getTime(),
+  owner_id: Discord.SnowflakeUtil.generate(),
+  channels: [],
+  roles: [],
+  presences: [],
+  voice_states: [],
+  emojis: [],
+})
+const channelID = Discord.SnowflakeUtil.generate()
+const channel = new Discord.TextChannel(guild, {
+  ...new Discord.GuildChannel(guild, {
+    ...new Discord.Channel(client, { id: channelID }),
+  }),
+  topic: 'topic',
+  name: 'trivia',
+  nsfw: false,
+  last_message_id: Discord.SnowflakeUtil.generate(),
+  lastPinTimestamp: new Date('2019-01-01').getTime(),
+  rate_limit_per_user: 0,
+})
+guild.channels = new Discord.GuildChannelManager(
+  guild,
+  new Discord.Collection()
+)
+client.channels = new Discord.GuildChannelManager(
+  guild,
+  new Discord.Collection()
+)
+guild.channels.add(channel)
+client.channels.add(channel)
+
+const user = new Discord.User(client, {
+  id: '368097495605182483',
+  username: 'Kitty ✨',
+  discriminator: 'Kitty#1909',
+  avatar: '<mock>',
+  bot: false,
+})
+const guildMember = new Discord.GuildMember(
+  client,
+  {
+    deaf: false,
+    mute: false,
+    self_mute: false,
+    self_deaf: false,
+    session_id: Discord.SnowflakeUtil.generate(),
+    channel_id: Discord.SnowflakeUtil.generate(),
+    nick: 'Kitty',
+    joined_at: new Date('2020-01-01').getTime(),
+    user,
+    roles: [],
   },
+  guild
+)
+
+const trivia = content => {
+  const message = new Discord.Message(
+    client,
+    {
+      id: Discord.SnowflakeUtil.generate(),
+      type: 'DEFAULT',
+      content: content,
+      author: user,
+      webhook_id: null,
+      member: guildMember,
+      pinned: false,
+      tts: false,
+      nonce: 'nonce',
+      embeds: [],
+      attachments: [],
+      edited_timestamp: null,
+      reactions: [],
+      mentions: [],
+      mention_roles: [],
+      mention_everyone: [],
+      hit: false,
+    },
+    channel
+  )
+
+  return command.handler(content.replace('!trivia ', ''), client, message)
 }
-const channel = { id: '123456789', name: 'trivia', guild }
-const author = { id: 'author_id', username: 'Author' }
-const message = { channel, author, guild }
 
 describe('Bot — !trivia', () => {
   it('should return nothing for a missing term', () => {
-    expect(trivia('', client, message)).to.equal(undefined)
+    expect(trivia('')).to.equal(undefined)
+  })
+
+  it('should be possible to display scores', () => {
+    trivia('!trivia scores').then(output =>
+      expect(output.title).to.contain('scores')
+    )
   })
 
   it('should be possible to start a card trivia', () => {
-    expect(trivia('card', client, message).title).to.contain('started')
-  })
-
-  it('should not be possible to stop someone else’s trivia', () => {
-    const author = { id: 'other_author_id', username: 'Other Author' }
-    const message = { channel, author, guild }
-    expect(trivia('stop', client, message)).to.equal(undefined)
-  })
-
-  it('should be possible to ask for hints', () => {
-    expect(trivia('struct', client, message).description).to.contain('type')
-    expect(trivia('pirate', client, message).description).to.contain('race')
-    expect(trivia('rare', client, message).description).to.contain('rarity')
-    expect(trivia('wp', client, message).description).to.contain('faction')
-    expect(trivia('hero', client, message).description).to.contain('hero')
-    expect(trivia('elder', client, message).description).to.contain('elder')
-  })
-
-  it('should be possible to stop one’s own trivia', () => {
-    expect(trivia('stop', client, message).title).to.contain('stopped')
-  })
-
-  it('should not be possible to stop a trivia if no trivia started', () => {
-    expect(trivia('stop', client, message)).to.equal(undefined)
+    expect(trivia('!trivia card').title).to.contain('trivia started')
   })
 })

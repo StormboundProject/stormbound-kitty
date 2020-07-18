@@ -4,10 +4,12 @@ const API_TOKEN = process.env.API_TOKEN
 const API_BASE_URL = 'https://jsonbin.org/kittysparkles'
 
 const getScores = guildId =>
-  fetch(API_BASE_URL + '/' + guildId, {
-    method: 'GET',
-    headers: { Authorization: 'token ' + API_TOKEN },
-  }).then(response => response.json())
+  window.Cypress
+    ? Promise.resolve({})
+    : fetch(API_BASE_URL + '/' + guildId, {
+        method: 'GET',
+        headers: { Authorization: 'token ' + API_TOKEN },
+      }).then(response => response.json())
 
 const setScore = (id, guildId, update = +1) =>
   getScores(guildId)
